@@ -14,7 +14,12 @@ require 'webmock/minitest'
 class RailsIntegrationSessionsController < ActionController::Base
   def create
     auth = request.env.fetch('omniauth.auth')
-    render json: { uid: auth['uid'], name: auth.dig('info', 'name'), email: auth.dig('info', 'email') }
+    render json: {
+      uid: auth['uid'],
+      name: auth.dig('info', 'name'),
+      email: auth.dig('info', 'email'),
+      credentials: auth['credentials']
+    }
   end
 
   def failure
@@ -96,6 +101,10 @@ class RailsIntegrationTest < Minitest::Test
     assert_equal '123456', payload['uid']
     assert_equal 'Rails Test User', payload['name']
     assert_equal 'rails-test@example.com', payload['email']
+    assert_equal 'access-token', payload.dig('credentials', 'token')
+    assert_equal 'refresh-token', payload.dig('credentials', 'refresh_token')
+    assert_equal 'root_readonly', payload.dig('credentials', 'scope')
+    refute(payload.dig('credentials', 'expires'))
 
     assert_requested :post, 'https://api.box.com/oauth2/token', times: 1
     assert_requested :get, 'https://api.box.com/2.0/users/me', times: 1
@@ -107,7 +116,12 @@ class RailsIntegrationTest < Minitest::Test
     stub_request(:post, 'https://api.box.com/oauth2/token').to_return(
       status: 200,
       headers: { 'Content-Type' => 'application/json' },
-      body: { access_token: 'access-token', token_type: 'bearer' }.to_json
+      body: {
+        access_token: 'access-token',
+        refresh_token: 'refresh-token',
+        scope: 'root_readonly',
+        token_type: 'bearer'
+      }.to_json
     )
   end
 

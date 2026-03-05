@@ -27,6 +27,16 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 end
 ```
 
+## Provider App Setup
+
+- Box developer console: <https://developer.box.com/>
+- Register callback URL (example): `https://your-app.example.com/auth/box/callback`
+
+## Options
+
+- `callback_url`
+- Request-phase query options can be passed directly to `/auth/box` when supported by Box OAuth endpoints.
+
 ## Auth Hash
 
 Example payload from `request.env['omniauth.auth']` (real flow shape, anonymized):
@@ -37,6 +47,12 @@ Example payload from `request.env['omniauth.auth']` (real flow shape, anonymized
   "info": {
     "name": "Sample User",
     "email": "sample@example.test"
+  },
+  "credentials": {
+    "token": "sample-access-token",
+    "refresh_token": "sample-refresh-token",
+    "expires": false,
+    "scope": "root_readonly"
   },
   "extra": {
     "raw_info": {
@@ -66,6 +82,7 @@ Notes:
 - `uid` is mapped from `raw_info.id` (as string)
 - `info.name` is mapped from `raw_info.name`
 - `info.email` is mapped from `raw_info.login`
+- `credentials` includes `token`, plus `refresh_token` when provided by Box
 - `extra.raw_info` is the full `users/me` response
 
 ## Provider Endpoints
@@ -83,6 +100,22 @@ bundle exec rake lint
 bundle exec rake test_unit
 bundle exec rake test_rails_integration
 ```
+
+## Test Structure
+
+- `test/omniauth_box2_test.rb`: strategy/unit behavior
+- `test/rails_integration_test.rb`: full Rack/Rails request+callback flow
+- `test/test_helper.rb`: shared test bootstrap
+
+## Compatibility
+
+- Ruby: `>= 3.2` (tested on `3.2`, `3.3`, `3.4`, `4.0`)
+- `omniauth-oauth2`: `>= 1.8`, `< 1.9`
+- Rails integration lanes: `~> 7.1.0`, `~> 7.2.0`, `~> 8.0.0`, `~> 8.1.0`
+
+## Release
+
+Tag releases as `vX.Y.Z`; GitHub Actions publishes the gem to RubyGems.
 
 ## License
 

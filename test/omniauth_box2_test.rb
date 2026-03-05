@@ -45,6 +45,29 @@ class OmniauthBox2Test < Minitest::Test
     assert_equal 'users/me', token.calls.first[:path]
   end
 
+  def test_credentials_include_refresh_token_even_when_token_does_not_expire
+    strategy = build_strategy
+    token = FakeCredentialAccessToken.new(
+      token: 'access-token',
+      refresh_token: 'refresh-token',
+      expires_at: nil,
+      expires: false,
+      params: { 'scope' => 'root_readonly' }
+    )
+
+    strategy.define_singleton_method(:access_token) { token }
+
+    assert_equal(
+      {
+        'token' => 'access-token',
+        'refresh_token' => 'refresh-token',
+        'expires' => false,
+        'scope' => 'root_readonly'
+      },
+      strategy.credentials
+    )
+  end
+
   def test_does_not_expose_wrong_omniauth_namespace
     assert_raises(NameError) { Omniauth::Box2::VERSION }
   end
@@ -84,6 +107,26 @@ class OmniauthBox2Test < Minitest::Test
     def get(path)
       @calls << { path: path }
       Struct.new(:parsed).new(@parsed_payload)
+    end
+  end
+
+  class FakeCredentialAccessToken
+    attr_reader :token, :refresh_token, :expires_at, :params
+
+    def initialize(token:, refresh_token:, expires_at:, expires:, params:)
+      @token = token
+      @refresh_token = refresh_token
+      @expires_at = expires_at
+      @expires = expires
+      @params = params
+    end
+
+    def expires?
+      @expires
+    end
+
+    def [](key)
+      { 'scope' => @params['scope'] }[key]
     end
   end
 end
