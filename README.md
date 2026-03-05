@@ -1,7 +1,7 @@
 # OmniAuth Box2 Strategy
 
-[![Test](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml/badge.svg)](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml)
-[![Gem Version](https://badge.fury.io/rb/omniauth-box2.svg)](https://badge.fury.io/rb/omniauth-box2)
+[![Test](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml?query=branch%3Amain)
+[![Gem Version](https://img.shields.io/gem/v/omniauth-box2.svg)](https://rubygems.org/gems/omniauth-box2)
 
 This gem provides an [OmniAuth](https://github.com/omniauth/omniauth) strategy for Box OAuth2.
 
