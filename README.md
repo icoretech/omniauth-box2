@@ -27,11 +27,46 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 end
 ```
 
-Auth hash fields exposed by this strategy:
-- `uid` from Box user `id`
-- `info[:name]` from Box user `name`
-- `info[:email]` from Box user `login`
-- `extra['raw_info']` full Box user payload
+## Auth Hash
+
+Example payload from `request.env['omniauth.auth']` (real flow shape, anonymized):
+
+```json
+{
+  "uid": "123456789",
+  "info": {
+    "name": "Sample User",
+    "email": "sample@example.test"
+  },
+  "extra": {
+    "raw_info": {
+      "type": "user",
+      "id": "123456789",
+      "name": "Sample User",
+      "login": "sample@example.test",
+      "created_at": "2012-05-09T09:12:30-07:00",
+      "modified_at": "2026-03-04T19:21:50-08:00",
+      "language": "en",
+      "timezone": "Europe/Amsterdam",
+      "space_amount": 999999999999999,
+      "space_used": 74112195069,
+      "max_upload_size": 53687091200,
+      "status": "active",
+      "job_title": "CEO",
+      "phone": "+390000000000",
+      "address": "",
+      "avatar_url": "https://example.app.box.com/api/avatar/large/123456789",
+      "notification_email": null
+    }
+  }
+}
+```
+
+Notes:
+- `uid` is mapped from `raw_info.id` (as string)
+- `info.name` is mapped from `raw_info.name`
+- `info.email` is mapped from `raw_info.login`
+- `extra.raw_info` is the full `users/me` response
 
 ## Provider Endpoints
 
