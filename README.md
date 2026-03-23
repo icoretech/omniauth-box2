@@ -1,4 +1,4 @@
-# OmniAuth Box2 Strategy
+# OmniAuth Box Strategy
 
 [![Test](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/icoretech/omniauth-box2/actions/workflows/test.yml?query=branch%3Amain)
 [![Gem Version](https://badge.fury.io/rb/omniauth-box2.svg)](https://badge.fury.io/rb/omniauth-box2)
@@ -79,6 +79,7 @@ Example payload from `request.env['omniauth.auth']` (real flow shape, anonymized
 ```
 
 Notes:
+
 - `uid` is mapped from `raw_info.id` (as string)
 - `info.name` is mapped from `raw_info.name`
 - `info.email` is mapped from `raw_info.login`
@@ -88,6 +89,7 @@ Notes:
 ## Provider Endpoints
 
 The strategy uses current Box OAuth and API endpoints:
+
 - Authorize URL: `https://account.box.com/api/oauth2/authorize`
 - Token URL: `https://api.box.com/oauth2/token`
 - User info URL: `https://api.box.com/2.0/users/me`
