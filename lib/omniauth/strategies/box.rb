@@ -1,52 +1,52 @@
 # frozen_string_literal: true
 
-require 'omniauth-oauth2'
+require "omniauth-oauth2"
 
 module OmniAuth
   module Strategies
     # OmniAuth strategy for Box OAuth2.
     class Box < OmniAuth::Strategies::OAuth2
-      option :name, 'box'
+      option :name, "box"
 
       option :client_options,
-             site: 'https://api.box.com/2.0',
-             authorize_url: 'https://account.box.com/api/oauth2/authorize',
-             token_url: 'https://api.box.com/oauth2/token',
-             connection_opts: {
-               headers: {
-                 user_agent: 'icoretech-omniauth-box2 gem',
-                 accept: 'application/json',
-                 content_type: 'application/json'
-               }
-             }
+        site: "https://api.box.com/2.0",
+        authorize_url: "https://account.box.com/api/oauth2/authorize",
+        token_url: "https://api.box.com/oauth2/token",
+        connection_opts: {
+          headers: {
+            user_agent: "icoretech-omniauth-box2 gem",
+            accept: "application/json",
+            content_type: "application/json"
+          }
+        }
 
-      uid { raw_info['id'].to_s }
+      uid { raw_info["id"].to_s }
 
       info do
         {
-          name: raw_info['name'],
-          email: raw_info['login']
+          name: raw_info["name"],
+          email: raw_info["login"]
         }.compact
       end
 
       credentials do
         {
-          'token' => access_token.token,
-          'refresh_token' => access_token.refresh_token,
-          'expires_at' => access_token.expires_at,
-          'expires' => access_token.expires?,
-          'scope' => token_scope
+          "token" => access_token.token,
+          "refresh_token" => access_token.refresh_token,
+          "expires_at" => access_token.expires_at,
+          "expires" => access_token.expires?,
+          "scope" => token_scope
         }.compact
       end
 
       extra do
         {
-          'raw_info' => raw_info
+          "raw_info" => raw_info
         }
       end
 
       def raw_info
-        @raw_info ||= access_token.get('users/me').parsed
+        @raw_info ||= access_token.get("users/me").parsed
       end
 
       # Ensure token exchange uses a stable callback URI that matches provider config.
@@ -56,7 +56,7 @@ module OmniAuth
 
       # Prevent authorization response params from being appended to redirect_uri.
       def query_string
-        return '' if request.params['code']
+        return "" if request.params["code"]
 
         super
       end
@@ -65,7 +65,7 @@ module OmniAuth
 
       def token_scope
         token_params = access_token.respond_to?(:params) ? access_token.params : {}
-        token_params['scope'] || (access_token['scope'] if access_token.respond_to?(:[]))
+        token_params["scope"] || (access_token["scope"] if access_token.respond_to?(:[]))
       end
     end
 

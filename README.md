@@ -98,7 +98,7 @@ The strategy uses current Box OAuth and API endpoints:
 
 ```bash
 bundle install
-bundle exec rake lint
+bundle exec standardrb --fix
 bundle exec rake test_unit
 bundle exec rake test_rails_integration
 ```
