@@ -69,7 +69,7 @@ class OmniauthBox2Test < Minitest::Test
   end
 
   def test_public_entrypoint_exposes_version_and_strategy_alias
-    assert_equal "2.0.3", OmniAuth::Box2::VERSION
+    assert_equal "2.0.4", OmniAuth::Box2::VERSION
     assert_same OmniAuth::Strategies::Box, OmniAuth::Strategies::Box2
     assert_equal "box", OmniAuth::Strategies::Box2.new(nil, "client-id", "client-secret").options.name
   end
